@@ -1,0 +1,28 @@
+# Node modules (toujours à ignorer, lourd et recréé via npm install)
+node_modules/
+
+# Fichier d'environnement (clé API, mots de passe, secrets)
+.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dossiers de build ou temporaires
+dist/
+build/
+tmp/
+temp/
+
+# OS files (optionnel mais pratique)
+.DS_Store
+Thumbs.db
+
+# base interne
+users.json
+
+# Optional: lock files of package managers if you don’t want to track them
+# package-lock.json
+# yarn.lock

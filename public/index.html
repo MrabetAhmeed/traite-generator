@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Générateur de Traite — Lettre de Change</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    header h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      color: #94a3b8;
+      margin-top: 0.4rem;
+      font-size: 0.9rem;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 1rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 700px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    }
+
+    .section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #64748b;
+      margin: 1.5rem 0 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #334155;
+    }
+
+    .section-title:first-child { margin-top: 0; }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .field-grid.single { grid-template-columns: 1fr; }
+    .field-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    label span.badge {
+      font-size: 0.65rem;
+      background: #334155;
+      color: #64748b;
+      padding: 0.1rem 0.4rem;
+      border-radius: 20px;
+      margin-left: 0.4rem;
+      font-weight: 500;
+    }
+
+    input {
+      background: #0f172a;
+      border: 1.5px solid #334155;
+      border-radius: 0.5rem;
+      color: #f1f5f9;
+      font-size: 0.9rem;
+      padding: 0.6rem 0.8rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96,165,250,0.15);
+    }
+
+    input::placeholder { color: #475569; }
+
+    /* Preview panel */
+    .preview-panel {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.75rem;
+      padding: 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .preview-panel h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #64748b;
+      margin-bottom: 0.8rem;
+    }
+
+    .preview-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .preview-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+    }
+
+    .preview-key {
+      color: #64748b;
+      min-width: 160px;
+      flex-shrink: 0;
+    }
+
+    .preview-val {
+      color: #f1f5f9;
+      font-weight: 600;
+      word-break: break-all;
+    }
+
+    .preview-val.amount { color: #34d399; }
+    .preview-val.lettres { color: #a78bfa; font-size: 0.75rem; }
+
+    .actions {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    button {
+      flex: 1;
+      padding: 0.75rem 1.2rem;
+      border-radius: 0.6rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    #previewBtn {
+      background: #334155;
+      color: #e2e8f0;
+    }
+    #previewBtn:hover { background: #475569; }
+
+    #generateBtn {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(99,102,241,0.4);
+    }
+    #generateBtn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.5); }
+    #generateBtn:active { transform: translateY(0); }
+    #generateBtn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .loading { display: none; }
+    .loading.active { display: inline; }
+
+    .msg {
+      margin-top: 0.8rem;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+    .msg.success { background: #064e3b; color: #6ee7b7; border: 1px solid #065f46; display: block; }
+    .msg.error   { background: #450a0a; color: #fca5a5; border: 1px solid #7f1d1d; display: block; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏦 Générateur de Traite</h1>
+  <p>Lettre de Change / Bill of Exchange — République Tunisienne</p>
+</header>
+
+<div class="card">
+
+  <div class="section-title">Dates & Localisation</div>
+  <div class="field-grid triple">
+    <div class="field">
+      <label>Date d'échéance <span class="badge">×2</span></label>
+      <input type="text" id="date_echeance" placeholder="11/12/2025" maxlength="10" />
+    </div>
+    <div class="field">
+      <label>Date d'édition <span class="badge">×2</span></label>
+      <input type="text" id="date_edition" placeholder="11/12/2026" maxlength="10" />
+    </div>
+    <div class="field">
+      <label>Ville <span class="badge">×2</span></label>
+      <input type="text" id="ville" placeholder="Sousse" />
+    </div>
+  </div>
+
+  <div class="section-title">Montant</div>
+  <div class="field-grid">
+    <div class="field">
+      <label>Montant en chiffres <span class="badge">×2</span></label>
+      <input type="text" id="montant" placeholder="2500,500" oninput="updatePreview()" />
+    </div>
+    <div class="field">
+      <label>Montant en lettres <span class="badge">auto</span></label>
+      <input type="text" id="montant_lettres_preview" readonly placeholder="Généré automatiquement" style="opacity:0.6;" />
+    </div>
+  </div>
+
+  <div class="section-title">Parties</div>
+  <div class="field-grid">
+    <div class="field">
+      <label>À l'ordre de</label>
+      <input type="text" id="a_lordre_de" placeholder="Société Aggregax" />
+    </div>
+    <div class="field">
+      <label>Payeur</label>
+      <input type="text" id="payeur" placeholder="Plaza Batiment" />
+    </div>
+  </div>
+
+  <div class="section-title">Banque & RIB</div>
+  <div class="field-grid">
+    <div class="field">
+      <label>Banque</label>
+      <input type="text" id="banque" placeholder="B.H Kantaoui" />
+    </div>
+    <div class="field">
+      <label>RIB <span class="badge">×2</span></label>
+      <input type="text" id="rib" placeholder="20 chiffres" maxlength="30" />
+    </div>
+  </div>
+
+  <!-- Live Preview -->
+  <div class="preview-panel" id="previewPanel" style="display:none;">
+    <h3>📋 Aperçu des valeurs imprimées</h3>
+    <div class="preview-rows" id="previewRows"></div>
+  </div>
+
+  <div class="actions">
+    <button id="previewBtn" onclick="showPreview()">👁 Aperçu</button>
+    <button id="generateBtn" onclick="generatePDF()">
+      <span class="loading" id="loadingText">⏳ Génération...</span>
+      <span id="btnText">⬇ Générer la Traite PDF</span>
+    </button>
+  </div>
+
+  <div class="msg" id="msg"></div>
+</div>
+
+<script>
+  // Date input auto-format
+  ['date_echeance', 'date_edition'].forEach(id => {
+    const input = document.getElementById(id);
+    input.addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '');
+      if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
+      if (v.length >= 6) v = v.slice(0,5) + '/' + v.slice(5,9);
+      this.value = v;
+    });
+  });
+
+  function getMontantData() {
+    const montant = document.getElementById('montant').value.trim();
+    if (!montant) return null;
+    const normalized = montant.replace(',', '.');
+    const [intPart, decPart] = normalized.split('.');
+    const dinars = parseInt(intPart) || 0;
+    const millimesStr = decPart ? decPart.padEnd(3, '0').substring(0, 3) : '000';
+    const millimes = parseInt(millimesStr) || 0;
+    const intFormatted = dinars.toLocaleString('fr-FR');
+    const formatted = `## ${intFormatted},${millimesStr} ##`;
+    return { dinars, millimes, formatted, millimesStr };
+  }
+
+  function updatePreview() {
+    const m = getMontantData();
+    if (!m) {
+      document.getElementById('montant_lettres_preview').value = '';
+      return;
+    }
+    // Quick client-side lettres (server will do the real one)
+    fetch('/preview', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ montant: document.getElementById('montant').value })
+    })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('montant_lettres_preview').value = data.montant_en_lettres || '';
+    })
+    .catch(() => {});
+  }
+
+  function showPreview() {
+    const data = collectData();
+    fetch('/preview', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(preview => {
+      const panel = document.getElementById('previewPanel');
+      const rows = document.getElementById('previewRows');
+      panel.style.display = 'block';
+
+      const labels = {
+        date_echeance: "Date d'échéance (×2)",
+        ville: "Ville (×2)",
+        date_edition: "Date d'édition (×2)",
+        rib: "RIB (×2)",
+        montant: "Montant (×2)",
+        montant_en_lettres: "Montant en lettres",
+        a_lordre_de: "À l'ordre de",
+        payeur: "Payeur",
+        banque: "Banque"
+      };
+
+      rows.innerHTML = Object.entries(preview).map(([k, v]) => {
+        const cls = k === 'montant' ? 'amount' : k === 'montant_en_lettres' ? 'lettres' : '';
+        return `<div class="preview-row">
+          <span class="preview-key">${labels[k] || k}</span>
+          <span class="preview-val ${cls}">${v}</span>
+        </div>`;
+      }).join('');
+    })
+    .catch(err => showMsg('Erreur lors de l\'aperçu', 'error'));
+  }
+
+  function collectData() {
+    return {
+      date_echeance: document.getElementById('date_echeance').value.trim(),
+      ville: document.getElementById('ville').value.trim(),
+      date_edition: document.getElementById('date_edition').value.trim(),
+      rib: document.getElementById('rib').value.trim(),
+      montant: document.getElementById('montant').value.trim(),
+      a_lordre_de: document.getElementById('a_lordre_de').value.trim(),
+      payeur: document.getElementById('payeur').value.trim(),
+      banque: document.getElementById('banque').value.trim()
+    };
+  }
+
+  function showMsg(text, type) {
+    const el = document.getElementById('msg');
+    el.textContent = text;
+    el.className = 'msg ' + type;
+    setTimeout(() => el.className = 'msg', 4000);
+  }
+
+  function generatePDF() {
+    const data = collectData();
+
+    // Validate at least montant is filled
+    if (!data.montant) {
+      showMsg('⚠ Veuillez saisir au moins le montant', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('generateBtn');
+    const loading = document.getElementById('loadingText');
+    const btnText = document.getElementById('btnText');
+
+    btn.disabled = true;
+    loading.classList.add('active');
+    btnText.style.display = 'none';
+
+    fetch('/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Erreur serveur');
+      return response.blob();
+    })
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `traite_${data.date_echeance || 'export'}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showMsg('✅ Traite générée avec succès !', 'success');
+    })
+    .catch(err => showMsg('❌ Erreur: ' + err.message, 'error'))
+    .finally(() => {
+      btn.disabled = false;
+      loading.classList.remove('active');
+      btnText.style.display = 'inline';
+    });
+  }
+</script>
+</body>
+</html>

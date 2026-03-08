@@ -1,0 +1,16 @@
+{
+  "name": "traite-generator",
+  "version": "1.0.0",
+  "description": "Générateur de Lettre de Change / Bill of Exchange — République Tunisienne",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  }
+}
