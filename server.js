@@ -16,15 +16,15 @@ const PDF_HEIGHT = 842;
 const topY = y => PDF_HEIGHT - y;
 
 const ZONES = {
-  Date_echeance:      [{ x:141.6, y:topY(51.9),  w:86.3,  h:17.8 }, { x:165.1, y:topY(170.9), w:74.3,  h:17.8 }],
-  Ville:              [{ x:241.4, y:topY(36.1),  w:77.7,  h:13.5 }, { x:16.3,  y:topY(169.4), w:70.6,  h:14.8 }],
-  Date_edition:       [{ x:242.3, y:topY(49.5),  w:77.3,  h:13.0 }, { x:90.2,  y:topY(170.4), w:70.1,  h:16.8 }],
-  RIB:                [{ x:153.1, y:topY(75.4),  w:187.1, h:14.9 }, { x:23.0,  y:topY(195.6), w:186.7, h:14.9 }],
-  Montant:            [{ x:373.8, y:topY(73.0),  w:102.7, h:13.0 }, { x:372.4, y:topY(114.7), w:102.6, h:12.9 }],
-  Montant_en_lettres: [{ x:17.8,  y:topY(140.0), w:403.0, h:11.0 }],
-  A_lordre_de:        [{ x:145.4, y:topY(128.7), w:203.9, h:16.8 }],
-  Payeur:             [{ x:225.5, y:topY(246.7), w:92.6,  h:40.3 }],
-  Banque:             [{ x:330.0, y:topY(210.2), w:139.1, h:20.6 }],
+  Date_echeance:      [{ x:136.6, y:topY(51.9),  w:86.3,  h:17.8 }, { x:160.1, y:topY(170.9), w:74.3,  h:17.8 }],
+  Ville:              [{ x:236.4, y:topY(36.1),  w:77.7,  h:13.5 }, { x:11.3,  y:topY(169.4), w:70.6,  h:14.8 }],
+  Date_edition:       [{ x:237.3, y:topY(49.5),  w:77.3,  h:13.0 }, { x:85.2,  y:topY(170.4), w:70.1,  h:16.8 }],
+  RIB:                [{ x:148.1, y:topY(75.4),  w:187.1, h:14.9 }, { x:18.0,  y:topY(195.6), w:186.7, h:14.9 }],
+  Montant:            [{ x:368.8, y:topY(73.0),  w:102.7, h:13.0 }, { x:367.4, y:topY(114.7), w:102.6, h:12.9 }],
+  Montant_en_lettres: [{ x:12.8,  y:topY(140.0), w:403.0, h:11.0 }],
+  A_lordre_de:        [{ x:140.4, y:topY(128.7), w:203.9, h:16.8 }],
+  Payeur:             [{ x:220.5, y:topY(246.7), w:92.6,  h:40.3 }],
+  Banque:             [{ x:325.0, y:topY(210.2), w:139.1, h:20.6 }],
 };
 
 // Standard font size used for ALL fields
