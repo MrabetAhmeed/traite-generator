@@ -166,7 +166,7 @@ const server = http.createServer(async(req,res)=>{
   } else { res.writeHead(404); res.end('Not found'); }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
