@@ -162,7 +162,7 @@ const server = http.createServer(async(req,res)=>{
     : path.join(__dirname,'public',pathname);
   if(fs.existsSync(fp)) {
     res.writeHead(200,{'Content-Type':MIME[path.extname(fp)]||'text/plain'});
-    res.end(fs.readFileSync(fp));
+    res.end(fs.readFileSync(fp)); 
   } else { res.writeHead(404); res.end('Not found'); }
 });
 
